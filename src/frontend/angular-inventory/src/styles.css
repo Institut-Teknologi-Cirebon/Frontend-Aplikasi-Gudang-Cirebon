@@ -1,0 +1,15 @@
+.my-toast {
+  top: 5vh;
+  right: 5vh;
+  color: white;
+  z-index: 1200;
+  position: fixed;
+}
+
+.bg-teal {
+  background-color: teal;
+}
+
+.input-upper {
+  text-transform: uppercase;
+}

@@ -1,0 +1,70 @@
+
+<div class="content">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex align-items-center">
+          <h4 class="card-title">Data Barang Expired</h4>
+
+        </div>
+
+      </div>
+      <div class="card-body">
+
+        <div class="table-responsive">
+          <div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="display table table-striped table-hover dataTable"
+                       role="grid" aria-describedby="add-row_info">
+                  <thead>
+                  <tr role="row">
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Tgl Expired</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Nama Barang</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Stok Barang</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Kemasan</th>
+
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Harga Beli Satuan</th>
+
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr *ngFor="let s of stockIns"  role="row" class="odd">
+
+                    <td>{{ s.expiredDate }}</td>
+                    <td>{{ s.product.name }}</td>
+                    <td>{{ s.product.warehouseQuantity + s.product.storeQuantity }}</td>
+                    <td>{{ s.product.unit }}</td>
+                    <td>{{ s.unitPurchasePrice }}</td>
+
+                  </tr>
+                  <tr *ngIf="stockIns.length == 0">
+                    <td colspan="8" class="text-center">
+                      Data tidak ada
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+

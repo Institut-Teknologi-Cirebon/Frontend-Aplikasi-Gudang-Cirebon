@@ -1,0 +1,220 @@
+<ngb-toast *ngIf="toastType == 'success'" [delay]="3000" (hidden)="toastType = ''" header="Notifikasi" class="my-toast bg-teal">
+  Berhasil {{ toastMessage }} data!
+</ngb-toast>
+
+<div class="content">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex align-items-center">
+          <h4 class="card-title">Data User</h4>
+          <button (click)="openAddModal(addContent)" style="float: right"  class="btn btn-success btn-sm ms-auto" data-toggle="modal" data-target="#addRowModal">
+            <i class="fa fa-plus"></i>
+            Tambah Data
+          </button>
+        </div>
+
+      </div>
+      <div class="card-body">
+
+        <div class="table-responsive">
+          <div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="display table table-striped table-hover dataTable"
+                       role="grid" aria-describedby="add-row_info">
+                  <thead>
+                  <tr role="row">
+
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Nama</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Username</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Peran</th>
+
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending" [style.width]="30">Aksi</th>
+
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr *ngFor="let u of users" role="row" class="odd">
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.role }}</td>
+
+                    <td>
+                      <button (click)="openUpdateModal(updateContent, u)" class="btn btn-primary btn-sm me-2">Ubah</button>
+                      <button (click)="openDeleteModal(deleteContent, u)" class="btn btn-danger btn-sm me-2">Hapus</button>
+                    </td>
+                  <tr *ngIf="users.length == 0">
+                    <td colspan="2" class="text-center">
+                      Data tidak ada
+                    </td>
+                  </tr>
+
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<ng-template #addContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Tambah Data Pengguna</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #addForm="ngForm" (ngSubmit)="onAddUser(addForm)">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Nama</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="name" class="form-control mb-2 text-uppercase" id="addName" autocomplete="off" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Username</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="username" class="form-control mb-2" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Password</label>
+        </div>
+        <div class="col-9">
+          <input type="password" ngModel name="password" class="form-control mb-2" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Konfirmasi Password</label>
+        </div>
+        <div class="col-9">
+          <input type="password" class="form-control mb-2" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Peran</label>
+        </div>
+        <div class="col-9">
+          <select name="role" ngModel class="form-control mb-2" required>
+            <option value="">-- Pilih Peran --</option>
+            <option *ngFor="let r of roles" [ngValue]="r">{{ r }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #updateContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Ubah Data</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #updateForm="ngForm" (ngSubmit)="onUpdateUser(updateForm.value)">
+    <div class="modal-body">
+      <input type="hidden" name="id" ngModel="{{ user?.id }}">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Nama</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ user?.name }}" name="name" class="form-control mb-2 text-uppercase" id="updateName" autocomplete="off" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Username</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ user?.username }}" name="username" class="form-control mb-2" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Password</label>
+        </div>
+        <div class="col-9">
+          <input type="password" ngModel name="password" class="form-control mb-2">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Konfirmasi Password</label>
+        </div>
+        <div class="col-9">
+          <input type="password" class="form-control mb-2">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Peran</label>
+        </div>
+        <div class="col-9">
+          <select name="role" ngModel="{{ user?.role }}" class="form-control mb-2" required>
+            <option value="">-- Pilih Peran --</option>
+            <option *ngFor="let r of roles" [ngValue]="r">{{ r }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="updateForm.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #deleteContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Konfirmasi Hapus</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    Anda yakin ingin menghapus?
+    <span class="badge rounded-pill text-bg-success">
+      {{ user?.name }}
+    </span>
+  </div>
+  <div class="modal-footer">
+    <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+    <button (click)="onDeleteUser(user!.id); modal.close()" type="button" class="btn btn-danger" id="delete">
+      Hapus
+    </button>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+<header id="header" class="header fixed-top d-flex align-items-center">
+  <div class="d-flex align-items-center justify-content-between"> <a routerLink="dashboard" class="logo d-flex align-items-center"> <img src="assets/img/logo.png" alt=""> <span class="d-none d-lg-block">Admin</span> </a> <i (click)="sidebarToggle()" class="bi bi-list toggle-sidebar-btn"></i></div>
+
+
+</header>
+<aside id="sidebar" class="sidebar">
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item"> <a class="nav-link " routerLink="dashboard"> <i class="bi bi-grid"></i> <span>Dashboard</span> </a></li>
+    <li class="nav-heading">Menu Utama</li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#"> <i class="bi bi-menu-button-wide"></i><span>Data Master</span><i class="bi bi-chevron-down ms-auto"></i> </a>
+      <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li> <a  routerLink="barang"> <i class="bi bi-circle"></i><span>Data Barang</span> </a></li>
+        <li> <a  routerLink="kategori"> <i class="bi bi-circle"></i><span>Kategori Barang</span> </a></li>
+        <li> <a  routerLink="konsumen"> <i class="bi bi-circle"></i><span>Konsumen</span> </a></li>
+        <li> <a  routerLink="rekening-kas"> <i class="bi bi-circle"></i><span>Rekening Kas</span> </a></li>
+
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#"> <i class="bi bi-journal-text"></i><span>Stok</span><i class="bi bi-chevron-down ms-auto"></i> </a>
+      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li> <a  routerLink="pembelian" class="text-decoration-none"> <i class="bi bi-circle"></i><span>Input Stok</span> </a></li>
+        <li> <a  routerLink="penjualan"> <i class="bi bi-circle"></i><span>Penjualan</span>
+        </a></li>
+        <li> <a  routerLink="stok"> <i class="bi bi-circle"></i><span>Rekap Stok</span> </a></li>
+
+      </ul>
+    </li>
+
+
+    <li class="nav-heading">Lainnya</li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#"> <i class="bi bi-layout-text-window-reverse"></i><span>Laporan</span><i class="bi bi-chevron-down ms-auto"></i> </a>
+      <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+        <li> <a  routerLink="expired"> <i class="bi bi-circle"></i><span>Laporan Expired</span> </a></li>
+        <li> <a  routerLink="arus-kas"> <i class="bi bi-circle"></i><span>Laporan Arus Kas</span> </a></li>
+
+      </ul>
+    </li>
+    <li class="nav-item"> <a class="nav-link collapsed"  routerLink="pengguna"> <i class="bi bi-person"></i> <span>Tambah User</span> </a></li>
+    <li class="nav-item"> <a (click)="logout()" class="nav-link collapsed" > <i class="bi bi-box-arrow-in-right"></i> <span>Logout</span> </a></li>
+
+  </ul>
+</aside>
+
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>{{ title }}</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item active">{{ title }}</li>
+      </ol>
+    </nav>
+  </div>
+
+<router-outlet></router-outlet>
+
+</main>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<footer id="footer" class="footer">
+  <div class="copyright"> &copy; Copyright <strong><span>Institut Teknologi Cirebon</span></strong>. All Rights Reserved</div>
+
+</footer>

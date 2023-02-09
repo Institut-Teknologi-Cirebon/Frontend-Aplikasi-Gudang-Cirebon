@@ -1,0 +1,188 @@
+<section class="section dashboard">
+
+
+
+        <div class="row">
+
+          <div class="col-xxl-3 col-md-6">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <h5 class="card-title">Total Saldo Kas </h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-bank"></i></div>
+                  <div class="ps-3">
+                    <tr>
+                      <!--      SALDO KAS-->
+                      <h6>Rp{{ totalCashBalance.toNumber()| number: '1.0-2' : 'ID' }}</h6>
+
+                    </tr>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-xxl-3 col-md-6">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <h5 class="card-title">Modal Hari Ini</h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-cash-coin"></i></div>
+                  <div class="ps-3">
+                    <h6>Rp{{totalStockInToday.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-3 col-md-6">
+            <div class="card info-card customers-card">
+              <div class="card-body">
+                <h5 class="card-title">Pendapatan Hari Ini</h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-cash-stack"></i></div>
+                  <div class="ps-3">
+                    <h6>Rp{{totalStockOutToday.toNumber()  | number: '1.0-2' : 'ID'}}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-3 col-md-6">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <h5 class="card-title">Laba Hari Ini</h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-reception-4"></i></div>
+                  <div class="ps-3">
+                    <tr>
+                      <h6>Rp{{totalProfitToday.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                    </tr>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+          <div class="row">
+
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Modal Bulan Ini</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-cash-coin"></i></div>
+                    <div class="ps-3">
+                      <tr>
+                        <h6>Rp{{totalStockInThisMonth.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                      </tr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card revenue-card">
+                <div class="card-body">
+                  <h5 class="card-title">Pendapatan Bulan Ini</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-cash-stack"></i></div>
+                    <div class="ps-3">
+                      <tr>
+                        <h6>Rp{{ totalStockOutThisMonth.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                      </tr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card customers-card">
+                <div class="card-body">
+                  <h5 class="card-title">Laba Bulan Ini</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-reception-4"></i></div>
+                    <div class="ps-3">
+                      <tr>
+                        <h6>Rp{{ totalProfitThisMonth.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                      </tr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+       <div class="row">
+
+         <div class="col-xxl-3 col-md-6">
+           <div class="card info-card sales-card">
+             <div class="card-body">
+               <h5 class="card-title">Modal Bulan Lalu</h5>
+               <div class="d-flex align-items-center">
+                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-cash-coin"></i></div>
+                 <div class="ps-3">
+                   <tr>
+                     <h6>Rp{{totalStockInLastMonth.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                   </tr>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+
+         <div class="col-xxl-3 col-md-6">
+           <div class="card info-card revenue-card">
+             <div class="card-body">
+               <h5 class="card-title">Pendapatan Bulan Lalu</h5>
+               <div class="d-flex align-items-center">
+                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-cash-stack"></i></div>
+                 <div class="ps-3">
+                   <tr>
+                     <h6>Rp{{totalStockOutLastMonth.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                   </tr>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+
+         <div class="col-xxl-3 col-md-6">
+           <div class="card info-card customers-card">
+             <div class="card-body">
+               <h5 class="card-title">Laba Bulan Lalu</h5>
+               <div class="d-flex align-items-center">
+                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center"> <i class="bi bi-reception-4"></i></div>
+                 <div class="ps-3">
+                   <tr>
+                     <h6>Rp{{ totalProfitLastMonth.toNumber() | number: '1.0-2' : 'ID'}}</h6>
+                   </tr>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+
+
+
+
+
+
+
+
+
+
+  </section>
+

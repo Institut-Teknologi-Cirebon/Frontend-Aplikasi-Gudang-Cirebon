@@ -1,0 +1,70 @@
+<div class="card-header py-3">
+  DATA STOK BARANG
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover table-striped">
+    <thead class="table-success align-middle text-center">
+    <tr>
+      <th rowspan="2">BARANG</th>
+      <th rowspan="2">KEMASAN</th>
+      <th colspan="4">STOK MASUK</th>
+      <th colspan="4">PENJUALAN</th>
+      <th colspan="3">STOK AKHIR / SALDO</th>
+      <th rowspan="2">EXPIRED</th>
+    </tr>
+    <tr>
+      <th>GUDANG</th>
+      <th>TOKO</th>
+      <th>TOTAL QTY</th>
+      <th>NOMINAL</th>
+      <th>GUDANG</th>
+      <th>TOKO</th>
+      <th>TOTAL QTY</th>
+      <th>NOMINAL</th>
+      <th>GUDANG</th>
+      <th>TOKO</th>
+      <th>TOTAL QTY</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let s of stockIns" class="align-middle">
+      <td>{{ s.product.name }}</td>
+      <td>{{ s.product.unit }}</td>
+
+      <!--      STOK MASUK -->
+      <td>{{ s.warehouseQuantity }}</td>
+      <td>{{ s.storeQuantity }}</td>
+      <td>{{ s.warehouseQuantity + s.storeQuantity }}</td>
+      <td>{{ s.amount }}</td>
+
+      <ng-container *ngFor="let so of s.stockOuts">
+
+        <!--      PENJUALAN -->
+        <td>{{ so.warehouseQuantity }}</td>
+        <td>{{ so.storeQuantity }}</td>
+        <td>{{ so.warehouseQuantity + so.storeQuantity }}</td>
+        <td>{{ so.totalSellingPrice }}</td>
+
+        <!--    STOK AKHIR / SALDO    -->
+        <td>{{ s.warehouseQuantity - so.warehouseQuantity }}</td>
+        <td>{{ s.storeQuantity - so.storeQuantity }}</td>
+        <td>{{ (s.warehouseQuantity - so.warehouseQuantity) + (s.storeQuantity - so.storeQuantity) }}</td>
+      </ng-container>
+      <ng-container *ngIf="s.stockOuts.length == 0">
+        <td *ngFor="let a of [].constructor(4)">0</td>
+        <td>{{ s.warehouseQuantity }}</td>
+        <td>{{ s.storeQuantity }}</td>
+        <td>{{ (s.warehouseQuantity) + (s.storeQuantity) }}</td>
+      </ng-container>
+      <td *ngIf="s.expiredAmount != null">{{ s.expiredAmount }}</td>
+      <td *ngIf="s.expiredAmount == null">0</td>
+    </tr>
+    <tr *ngIf="stockIns.length == 0">
+      <td colspan="8" class="text-center">
+        Data tidak ada
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

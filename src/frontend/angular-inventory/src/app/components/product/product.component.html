@@ -1,0 +1,215 @@
+
+<ngb-toast *ngIf="toastType == 'success'" [delay]="3000" (hidden)="toastType = ''" header="Notifikasi" class="my-toast bg-teal">
+  Berhasil {{ toastMessage }} data!
+</ngb-toast>
+
+<div class="content">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex align-items-center">
+          <h4 class="card-title">Data Kategori</h4>
+          <button (click)="openAddModal(addContent)" style="float: right"  class="btn btn-success btn-sm ms-auto" data-toggle="modal" data-target="#addRowModal">
+            <i class="fa fa-plus"></i>
+            Tambah Data
+          </button>
+        </div>
+
+      </div>
+      <div class="card-body">
+
+        <div class="table-responsive">
+          <div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="display table table-striped table-hover dataTable"
+                       role="grid" aria-describedby="add-row_info">
+                  <thead>
+                  <tr role="row">
+
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Kode</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Nama Barang</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Satuan</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending">Kategori</th>
+                    <th style="width: 126.281px;" class="sorting" tabindex="0"
+                        aria-controls="add-row" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending" [style.width]="30">Aksi</th>
+
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr *ngFor="let p of products">
+
+                    <td>{{ p.code }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.unit }}</td>
+                    <td>{{ p. category.name }}</td>
+
+                    <td>
+                      <button (click)="openUpdateModal(updateContent, p)" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRowModal">
+
+                      Ubah
+                    </button>
+<!--                      <button (click)="openDeleteModal(deleteContent, p)" class = " btn btn-danger btn-sm ml-3" data-toggle="modal" data-target="#addRowModal">-->
+
+<!--                        Hapus-->
+<!--                      </button>-->
+                    </td>
+                  <tr *ngIf="products.length == 0">
+                    <td colspan="8" class="text-center">
+                      Data tidak ada
+                    </td>
+                  </tr>
+
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<ng-template #addContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Tambah Data Barang</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #addForm="ngForm" (ngSubmit)="onAddProduct(addForm)">
+    <div class="modal-body">
+      <input type="hidden" ngModel name="code">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Nama</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="name" class="form-control mb-2 text-uppercase" id="addName" autocomplete="off" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Satuan</label>
+        </div>
+        <div class="col-9">
+          <select name="unit" ngModel class="form-control mb-2" required>
+            <option value="">-- Pilih Satuan --</option>
+            <option *ngFor="let u of productUnits" [ngValue]="u">{{ u }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Kategori</label>
+        </div>
+        <div class="col-9">
+          <select name="category" ngModel class="form-control" required>
+            <option value="">-- Pilih Kategori --</option>
+            <option *ngFor="let c of categories" [ngValue]="c">{{ c.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <input type="hidden" ngModel="0" name="warehouseQuantity">
+      <input type="hidden" ngModel="0" name="storeQuantity">
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #updateContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Ubah Data</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #updateForm="ngForm" (ngSubmit)="onUpdateProduct(updateForm.value)">
+    <div class="modal-body">
+      <input type="hidden" ngModel="{{ product?.id }}" name="id">
+      <input type="hidden" ngModel="{{ product?.code }}" name="code">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label align-middle">Nama</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ product?.name }}" name="name" class="form-control mb-2 text-uppercase" id="updateName" autocomplete="off" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Satuan</label>
+        </div>
+        <div class="col-9">
+          <select name="unit" ngModel="{{ product?.unit }}" class="form-control mb-2" required>
+            <option value="">-- Pilih Satuan --</option>
+            <option *ngFor="let u of productUnits" [ngValue]="u">{{ u }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Kategori</label>
+        </div>
+        <div class="col-9">
+          <select [compareWith]="compareCategories" [(ngModel)]="product!.category" name="category" class="form-control" required>
+            <option value="">-- Pilih Kategori --</option>
+            <option *ngFor="let c of categories" [ngValue]="c">{{ c.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <input type="hidden" ngModel="{{ product?.warehouseQuantity }}" name="warehouseQuantity">
+      <input type="hidden" ngModel="{{ product?.storeQuantity }}" name="storeQuantity">
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="updateForm.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan
+      </button>
+    </div>
+  </form>
+</ng-template>
+<!--<ng-template #deleteContent let-modal>-->
+<!--  <div class="modal-header">-->
+<!--    <h1 class="modal-title fs-5">Konfirmasi Hapus</h1>-->
+<!--    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>-->
+<!--  </div>-->
+<!--  <div class="modal-body">-->
+<!--    Anda yakin ingin menghapus?-->
+<!--    <span class="badge rounded-pill text-bg-success">-->
+<!--      {{ product?.name }}-->
+<!--    </span>-->
+<!--  </div>-->
+<!--  <div class="modal-footer">-->
+<!--    <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>-->
+<!--    <button (click)="onDeleteProduct(product!.id); modal.close()" type="button" class="btn btn-danger" id="delete">-->
+<!--      Hapus-->
+<!--    </button>-->
+<!--  </div>-->
+<!--</ng-template>-->
+
+
+
+
+
+
+
+
+
+

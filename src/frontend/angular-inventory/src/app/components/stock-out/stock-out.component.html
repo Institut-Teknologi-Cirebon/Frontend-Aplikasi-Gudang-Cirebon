@@ -1,0 +1,290 @@
+<ngb-toast *ngIf="toastType == 'success'" [delay]="3000" (hidden)="toastType = ''" header="Notifikasi"
+           class="my-toast bg-teal">
+  Berhasil {{ toastMessage }} data!
+</ngb-toast>
+
+<ngb-toast *ngIf="toastType == 'danger'" [delay]="3000" (hidden)="toastType = ''" header="Notifikasi"
+           class="my-toast bg-danger">
+  Gagal menyimpan data!<br>
+  {{ toastMessage }}
+</ngb-toast>
+
+<div class="card-header py-3">
+  DATA PENJUALAN BARANG
+  <button (click)="openAddModal(addContent)" class="btn btn-success btn-sm float-end">
+    Tambah Data
+  </button>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover table-striped">
+    <thead class="table-success align-middle text-center">
+    <tr>
+      <th rowspan="2">TANGGAL</th>
+      <th rowspan="2">TRX</th>
+      <th rowspan="2">KONSUMEN</th>
+      <th colspan="2">BARANG</th>
+      <th colspan="2">HARGA BELI</th>
+      <th colspan="3">PENJUALAN</th>
+      <th rowspan="2">UANG YANG DIBAYAR</th>
+      <th rowspan="2">SISA YANG BELUM DIBAYAR</th>
+      <th rowspan="2">KEUNTUNGAN</th>
+      <th rowspan="2">AKSI</th>
+    </tr>
+    <tr>
+      <th>NAMA BARANG</th>
+      <th>KEMASAN</th>
+      <th>HARGA BELI SATUAN</th>
+      <th>HARGA BELI TOTAL</th>
+      <th>QTY</th>
+      <th>HARGA JUAL SATUAN</th>
+      <th>NOMINAL</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let s of stockOuts" class="align-middle">
+      <td>{{ s.date }}</td>
+      <td>{{ s.trx }}</td>
+      <td>{{ s.stall.name }}</td>
+      <td>{{ s.product.name }}</td>
+      <td>{{ s.product.unit }}</td>
+      <td class="text-end">{{ s.unitPurchasePrice | number: '1.0-2' : 'ID' }}</td>
+      <ng-container *ngIf="s.trx == 'GUDANG'">
+        <td class="text-end">{{ s.totalPurchasePrice | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.warehouseQuantity | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.unitSellingPrice | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.totalSellingPrice | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.moneyPaid | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.receivables | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.profit | number: '1.0-2' : 'ID' }}</td>
+      </ng-container>
+      <ng-container *ngIf="s.trx == 'TOKO'">
+        <td class="text-end">{{ s.totalPurchasePrice | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.storeQuantity | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.unitSellingPrice | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.totalSellingPrice | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.moneyPaid | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.receivables | number: '1.0-2' : 'ID' }}</td>
+        <td class="text-end">{{ s.profit | number: '1.0-2' : 'ID' }}</td>
+      </ng-container>
+      <td>
+        <button (click)="openUpdateModal(updateContent, s)" class="btn btn-primary btn-sm me-2">Ubah</button>
+        <button (click)="openDeleteModal(deleteContent, s)" class="btn btn-danger btn-sm me-2">Hapus</button>
+      </td>
+    </tr>
+    <tr *ngIf="stockOuts.length == 0">
+      <td colspan="8" class="text-center">
+        Data tidak ada
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #addContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Tambah Data Penjualan Barang</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #addForm="ngForm" (ngSubmit)="onAddStockOut(addForm)">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Tanggal</label>
+        </div>
+        <div class="col-9">
+          <input type="date" [ngModel]="today | date: 'yyyy-MM-dd'" name="date" class="form-control mb-2" id="addDate"
+                 required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">TRX</label>
+        </div>
+        <div class="col-9">
+          <select ngModel name="trx" class="form-control mb-2" required>
+            <option value="">-- Pilih TRX --</option>
+            <option value="GUDANG">GUDANG</option>
+            <option value="TOKO">TOKO</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Konsumen</label>
+        </div>
+        <div class="col-9">
+          <select ngModel name="stall" class="form-control mb-2" required>
+            <option value="">-- Pilih Konsumen --</option>
+            <option *ngFor="let s of stalls" [ngValue]="s">{{ s.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Barang</label>
+        </div>
+        <div class="col-9">
+          <select ngModel name="product" class="form-control mb-2" required>
+            <option value="">-- Pilih Barang --</option>
+            <option *ngFor="let p of products" [ngValue]="p">{{ p.name }} ({{ p.unit }})</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Harga Beli Satuan</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="unitPurchasePrice" class="form-control mb-2"
+                 appCurrencyNumber required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">QTY</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="quantity" class="form-control mb-2"
+                 appDotNumber required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Nominal Penjualan</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="totalSellingPrice" class="form-control mb-2"
+                 appCurrencyNumber required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Uang yang Dibayar</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="moneyPaid" class="form-control mb-2"
+                 appCurrencyNumber required>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #updateContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Ubah Data</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #updateForm="ngForm" (ngSubmit)="onUpdateStockOut(updateForm)">
+    <div class="modal-body">
+      <input type="hidden" name="id" ngModel="{{ stockOut?.id }}">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Tanggal</label>
+        </div>
+        <div class="col-9">
+          <input type="date" [ngModel]="stockOut?.date | date: 'yyyy-MM-dd'" name="date" class="form-control mb-2"
+                 id="updateDate" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">TRX</label>
+        </div>
+        <div class="col-9">
+          <select ngModel="{{ stockOut?.trx }}" name="trx" class="form-control mb-2" required>
+            <option value="">-- Pilih TRX --</option>
+            <option value="GUDANG">GUDANG</option>
+            <option value="TOKO">TOKO</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Konsumen</label>
+        </div>
+        <div class="col-9">
+          <select [compareWith]="compareStalls" [(ngModel)]="stockOut!.stall" name="stall" class="form-control mb-2" required>
+            <option value="">-- Pilih Konsumen --</option>
+            <option *ngFor="let s of stalls" [ngValue]="s">{{ s.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Barang</label>
+        </div>
+        <div class="col-9">
+          <select [compareWith]="compareProducts" [(ngModel)]="stockOut!.product" name="product"
+                  class="form-control mb-2" required>
+            <option [ngValue]="stockOut!.product">
+              {{ stockOut!.product.name }} ({{ stockOut!.product.unit }})
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Harga Beli Satuan</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ addDotNumberCurrency(stockOut!.unitPurchasePrice) }}" name="unitPurchasePrice" class="form-control mb-2" appCurrencyNumber required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">QTY</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ addDotNumber(qty!) }}" name="quantity" class="form-control mb-2"
+                 appDotNumber required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Nominal Penjualan</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ addDotNumberCurrency(stockOut!.totalSellingPrice) }}" name="totalSellingPrice" class="form-control mb-2" appCurrencyNumber required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Uang yang Dibayar</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ addDotNumberCurrency(stockOut!.moneyPaid) }}" name="moneyPaid" class="form-control mb-2" appCurrencyNumber required>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="updateForm.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #deleteContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Konfirmasi Hapus</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    Anda yakin ingin menghapus?
+    <span class="badge rounded-pill text-bg-success">
+      {{ stockOut?.product?.name }}
+    </span>
+  </div>
+  <div class="modal-footer">
+    <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+    <button (click)="onDeleteStockOut(stockOut!.id); modal.close()" type="button" class="btn btn-danger" id="delete">
+      Hapus
+    </button>
+  </div>
+</ng-template>

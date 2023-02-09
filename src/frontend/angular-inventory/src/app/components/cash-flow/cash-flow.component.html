@@ -1,0 +1,230 @@
+<ngb-toast *ngIf="toastType == 'success'" [delay]="3000" (hidden)="toastType = ''" header="Notifikasi" class="my-toast bg-teal">
+  Berhasil {{ toastMessage }} data!
+</ngb-toast>
+
+<div class="card-header py-3">
+  DATA ARUS KAS
+  <button (click)="openAddModal(addContent)" class="btn btn-success btn-sm float-end">
+    Tambah Data
+  </button>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover table-striped">
+    <thead class="table-success align-middle text-center">
+    <tr>
+      <th rowspan="2">TANGGAL</th>
+      <th rowspan="2">HARI</th>
+      <th rowspan="2">URAIAN</th>
+      <th [colSpan]="cashAccounts.length" class="table-warning">MASUK</th>
+      <th [colSpan]="cashAccounts.length" class="table-danger">KELUAR</th>
+      <th [colSpan]="cashAccounts.length" class="table-primary">SALDO</th>
+      <th rowspan="2">AKSI</th>
+    </tr>
+    <tr>
+      <th *ngFor="let ca of cashAccounts" class="table-warning">{{ ca.name }}</th>
+      <th *ngFor="let ca of cashAccounts" class="table-danger">{{ ca.name }}</th>
+      <th *ngFor="let ca of cashAccounts" class="table-primary">{{ ca.name }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let cf of cashFlows; let i = index" class="align-middle">
+      <td>{{ cf.date }}</td>
+      <td>{{ cf.date | date: 'EEEE': '': 'ID' }}</td>
+      <td>{{ cf.detail }}</td>
+
+      <!--      KAS MASUK-->
+      <ng-container *ngFor="let ca of cashAccounts">
+        <td *ngIf="cf.cashAccount.id == ca.id && cf.type == 'MASUK'" class="table-warning text-end">
+          {{ cf.amount | number: '1.0-2' : 'ID' }}
+        </td>
+        <td *ngIf="cf.cashAccount.id != ca.id || cf.type != 'MASUK'" class="table-warning"></td>
+      </ng-container>
+
+      <!--      KAS KELUAR-->
+      <ng-container *ngFor="let ca of cashAccounts">
+        <td *ngIf="cf.cashAccount.id == ca.id && cf.type == 'KELUAR'" class="table-danger text-end">
+          {{ cf.amount | number: '1.0-2' : 'ID' }}
+        </td>
+        <td *ngIf="cf.cashAccount.id != ca.id || cf.type != 'KELUAR'" class="table-danger"></td>
+      </ng-container>
+
+      <!--      SALDO KAS-->
+      <ng-container *ngFor="let ca of cashAccounts">
+        <td class="table-primary text-end">
+          {{ calculateAmount(i, ca) | number: '1.0-2' : 'ID' }}
+        </td>
+      </ng-container>
+      <td>
+        <button (click)="openUpdateModal(updateContent, cf)" class="btn btn-primary btn-sm m-1">Ubah</button>
+        <button (click)="openDeleteModal(deleteContent, cf)" class="btn btn-danger btn-sm m-1">Hapus</button>
+      </td>
+    </tr>
+
+    <tr *ngIf="cashFlows.length > 0">
+      <th [colSpan]="cashAccounts.length * 2 + 3" class="text-end">TOTAL SALDO</th>
+      <th [colSpan]="cashAccounts.length + 1" class="text-center">
+        {{ calculateTotalBalance() | number: '1.0-2' : 'ID' }}
+      </th>
+    </tr>
+    <tr *ngIf="cashFlows.length == 0">
+      <td colspan="8" class="text-center">Data tidak ada.</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<ng-template #addContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Tambah Data Arus Kas</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #addForm="ngForm" (ngSubmit)="onAddCashFlow(addForm)">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Tanggal</label>
+        </div>
+        <div class="col-9">
+          <input type="date" [ngModel]="today | date: 'yyyy-MM-dd'" name="date" class="form-control mb-2" id="addDate" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Uraian</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="detail" class="form-control mb-2 text-uppercase" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Rekening Kas</label>
+        </div>
+        <div class="col-9">
+          <select ngModel name="cashAccount" class="form-control mb-2" required>
+            <option value="">-- Pilih Rekening Kas --</option>
+            <option *ngFor="let ca of cashAccounts" [ngValue]="ca">{{ ca.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Masuk/Keluar</label>
+        </div>
+        <div class="col-9">
+          <select ngModel name="type" class="form-control mb-2" required>
+            <option value="">-- Pilih Masuk/Keluar --</option>
+            <option value="MASUK">MASUK</option>
+            <option value="KELUAR">KELUAR</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Nominal</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel name="amount" class="form-control mb-2" appCurrencyNumber required>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #updateContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Ubah Data</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <form #updateContent="ngForm" (ngSubmit)="onUpdateCashFlow(updateContent)">
+    <div class="modal-body">
+      <input type="hidden" name="id" ngModel="{{ cashFlow?.id }}">
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Tanggal</label>
+        </div>
+        <div class="col-9">
+          <input type="date" [ngModel]="cashFlow?.date | date: 'yyyy-MM-dd'" name="date" class="form-control mb-2" id="updateDate" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Uraian</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ cashFlow?.detail }}" name="detail" class="form-control mb-2 text-uppercase" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Rekening Kas</label>
+        </div>
+        <div class="col-9">
+          <select [compareWith]="compareCashAccount" [(ngModel)]="cashFlow!.cashAccount" name="cashAccount" class="form-control mb-2" required>
+            <option value="">-- Pilih Rekening Kas --</option>
+            <option *ngFor="let ca of cashAccounts" [ngValue]="ca">{{ ca.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Masuk/Keluar</label>
+        </div>
+        <div class="col-9">
+          <select [(ngModel)]="cashFlow!.type" name="type" class="form-control mb-2" required>
+            <option value="">-- Pilih Masuk/Keluar --</option>
+            <option value="MASUK">MASUK</option>
+            <option value="KELUAR">KELUAR</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label class="form-label">Nominal</label>
+        </div>
+        <div class="col-9">
+          <input type="text" ngModel="{{ addDotNumberCurrency(cashFlow!.amount) }}" name="amount" class="form-control mb-2" appCurrencyNumber required>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+      <button [disabled]="updateContent.invalid" type="submit" class="btn btn-primary" (click)="modal.close()">Simpan</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #deleteContent let-modal>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5">Konfirmasi Hapus</h1>
+    <button type="button" (click)="modal.close()" class="btn-close" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    Anda yakin ingin menghapus?
+    <br>
+    <span class="badge rounded-pill text-bg-success">
+      {{ cashFlow?.detail }}
+    </span>
+  </div>
+  <div class="modal-footer">
+    <button (click)="modal.close()" type="button" class="btn btn-secondary">Batal</button>
+    <button (click)="onDeleteCashFlow(cashFlow!.id); modal.close()" type="button" class="btn btn-danger" id="delete">
+      Hapus
+    </button>
+  </div>
+</ng-template>
